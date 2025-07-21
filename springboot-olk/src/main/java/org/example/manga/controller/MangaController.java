@@ -1,36 +1,39 @@
-package org.example.controller;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
-import org.example.model.MangaEntry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+package org.example.manga.controller;
 
-        import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
+
+import org.example.manga.model.MangaEntryDto;
+import org.example.manga.service.MangaService;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/api/manga")
+@Validated
 public class MangaController {
-    private static final Logger logger = LoggerFactory.getLogger(MangaController.class);
-    private final List<MangaEntry> store = new CopyOnWriteArrayList<>();
-    private final Counter addCounter;
+    private final MangaService service;
 
-    public MangaController(MeterRegistry registry) {
-        addCounter = registry.counter("manga_add_total");
+    public MangaController(MangaService service) {
+        this.service = service;
     }
 
+    record AddRequest(@NotBlank String name, @Positive int chapter) {}
+
     @PostMapping("/add")
-    public MangaEntry add(@RequestBody MangaEntry entry) {
-        store.add(entry);
-        addCounter.increment();
-        logger.info("Added manga entry: {}", entry);
-        return entry;
+    public MangaEntryDto add(@RequestBody @Valid AddRequest req) {
+        return service.addEntry(req.name(), req.chapter());
     }
 
     @GetMapping("/list")
-    public List<MangaEntry> list() {
-        logger.info("Listing all manga entries, count={}", store.size());
-        return store;
+    public List<MangaEntryDto> list() {
+        return service.listEntries();
     }
 }

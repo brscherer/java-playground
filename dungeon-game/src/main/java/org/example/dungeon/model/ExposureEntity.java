@@ -2,35 +2,32 @@ package org.example.dungeon.model;
 
 import jakarta.persistence.*;
 
-import java.time.Instant;
-import java.util.UUID;
-
 @Entity
 @Table(name = "experiment_exposures")
 public class ExposureEntity {
 
     @Id
-    @Column(name = "request_id")
-    private UUID requestId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "experiment_key", nullable = false)
+    private String playerId;
     private String experimentKey;
-
     private String variant;
 
-    @Column(name = "user_id", nullable = false)
-    private String userId;
-
-    @Column(name = "assigned_at", nullable = false)
-    private Instant assignedAt;
-
-    protected ExposureEntity() {}
-
-    public ExposureEntity(UUID requestId, String experimentKey, String variant, String userId, Instant assignedAt) {
-        this.requestId = requestId;
+    public ExposureEntity() {}
+    public ExposureEntity(String playerId, String experimentKey, String variant) {
+        this.playerId = playerId;
         this.experimentKey = experimentKey;
         this.variant = variant;
-        this.userId = userId;
-        this.assignedAt = assignedAt;
     }
+
+    // Getters / Setters
+    public Long getId() { return id; }
+    public String getPlayerId() { return playerId; }
+    public String getExperimentKey() { return experimentKey; }
+    public String getVariant() { return variant; }
+
+    public void setPlayerId(String playerId) { this.playerId = playerId; }
+    public void setExperimentKey(String experimentKey) { this.experimentKey = experimentKey; }
+    public void setVariant(String variant) { this.variant = variant; }
 }

@@ -2,8 +2,7 @@ package org.example.dungeon.repository;
 
 import org.example.dungeon.model.ExposureEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
-public interface ExposureRepository extends JpaRepository<ExposureEntity, UUID> {
-}
+@Repository
+public interface ExposureRepository extends JpaRepository<ExposureEntity, Long> {}

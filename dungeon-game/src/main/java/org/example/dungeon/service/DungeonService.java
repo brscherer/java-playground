@@ -5,74 +5,41 @@ import org.example.dungeon.dao.ExposureDao;
 import org.example.dungeon.dto.SolveRequest;
 import org.example.dungeon.dto.SolveResponse;
 import org.example.dungeon.experiment.ExperimentAssigner;
-import org.example.dungeon.model.DungeonSolver;
-import org.example.dungeon.model.Dp2dSolver;
-import org.example.dungeon.model.Dp1dSolver;
-import io.micrometer.core.instrument.MeterRegistry;
+import org.example.dungeon.model.DungeonSolutionEntity;
+import org.example.dungeon.model.ExposureEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Instant;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class DungeonService {
 
-    private final ExperimentAssigner assigner;
+    private final ExperimentAssigner experimentAssigner;
+    private final DungeonSolver solver;
     private final DungeonSolutionDao solutionDao;
     private final ExposureDao exposureDao;
-    private final MeterRegistry meterRegistry;
 
-    private final DungeonSolver solverA = new Dp2dSolver();
-    private final DungeonSolver solverB = new Dp1dSolver();
-
-    public DungeonService(
-            ExperimentAssigner assigner,
-            DungeonSolutionDao solutionDao,
-            ExposureDao exposureDao,
-            MeterRegistry meterRegistry
-    ) {
-        this.assigner = assigner;
+    public DungeonService(ExperimentAssigner experimentAssigner,
+                          DungeonSolver solver,
+                          DungeonSolutionDao solutionDao,
+                          ExposureDao exposureDao) {
+        this.experimentAssigner = experimentAssigner;
+        this.solver = solver;
         this.solutionDao = solutionDao;
         this.exposureDao = exposureDao;
-        this.meterRegistry = meterRegistry;
     }
 
-    @Transactional
-    public SolveResponse solve(String userIdHeader, String forcedVariant, SolveRequest request) {
-        String userId = Optional.ofNullable(userIdHeader)
-                .orElseGet(() -> Optional.ofNullable(request.userId()).orElse(UUID.randomUUID().toString()));
+    public SolveResponse solve(SolveRequest request) {
+        // 1️⃣ Assign variant
+        String variant = experimentAssigner.choose("dungeon_game", request.playerId());
 
-        String variant = (forcedVariant != null)
-                ? forcedVariant
-                : assigner.choose("dungeon-solver", userId);
+        // 2️⃣ Solve dungeon
+        int minHealth = solver.solve(request.dungeon(), variant);
 
-        DungeonSolver solver = switch (variant) {
-            case "DP_2D" -> solverA;
-            case "DP_1D" -> solverB;
-            default -> throw new IllegalArgumentException("Unknown variant: " + variant);
-        };
+        // 3️⃣ Persist experiment exposure
+        exposureDao.save(new ExposureEntity(request.playerId(), "dungeon_game", variant));
 
-        UUID requestId = UUID.randomUUID();
-        exposureDao.recordExposure(requestId, "dungeon-solver", variant, userId, Instant.now());
+        // 4️⃣ Persist solution
+        solutionDao.save(new DungeonSolutionEntity(request.playerId(), minHealth, variant));
 
-        int[][] grid = request.toGrid();
-        long start = System.nanoTime();
-        int result = solver.minInitialHealth(grid);
-        long durationMs = (System.nanoTime() - start) / 1_000_000;
-
-        meterRegistry.timer("dungeon.solve", "variant", variant)
-                .record(durationMs, java.util.concurrent.TimeUnit.MILLISECONDS);
-
-        solutionDao.save(requestId, userId, request.grid(), result, variant, durationMs);
-
-        return new SolveResponse(requestId, result, variant, durationMs);
-    }
-
-    public SolveResponse getById(UUID id) {
-        var entity = solutionDao.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Solution not found: " + id));
-        return new SolveResponse(entity.getId(), entity.getResult(), entity.getVariant(), entity.getDurationMs());
+        return new SolveResponse(request.playerId(), minHealth, variant);
     }
 }

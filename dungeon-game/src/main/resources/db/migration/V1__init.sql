@@ -1,21 +1,13 @@
 CREATE TABLE dungeon_solutions (
-  id UUID PRIMARY KEY,
-  user_id TEXT NOT NULL,
-  grid JSONB NOT NULL,
-  result INTEGER NOT NULL,
-  variant TEXT NOT NULL,
-  duration_ms BIGINT NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    id BIGSERIAL PRIMARY KEY,
+    player_id VARCHAR(255) NOT NULL,
+    min_health_required INT NOT NULL,
+    variant VARCHAR(10) NOT NULL
 );
 
 CREATE TABLE experiment_exposures (
-  request_id UUID PRIMARY KEY,
-  experiment_key TEXT NOT NULL,
-  variant TEXT NOT NULL,
-  user_id TEXT NOT NULL,
-  assigned_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    id BIGSERIAL PRIMARY KEY,
+    player_id VARCHAR(255) NOT NULL,
+    experiment_key VARCHAR(255) NOT NULL,
+    variant VARCHAR(10) NOT NULL
 );
-
-CREATE INDEX ON dungeon_solutions (variant);
-CREATE INDEX ON dungeon_solutions (created_at);
-CREATE INDEX ON experiment_exposures (experiment_key, variant);

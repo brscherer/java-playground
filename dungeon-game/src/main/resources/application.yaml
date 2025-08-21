@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dungeon
+    username: dungeon
+    password: dungeon
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+app:
+  experiments:
+    dungeon-solver:
+      split: "DP_2D:0.5,DP_1D:0.5"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus

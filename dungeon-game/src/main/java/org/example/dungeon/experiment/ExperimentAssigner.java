@@ -32,8 +32,13 @@ public final class ExperimentAssigner {
     private static double uniform01(String s) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] digest = md.digest(s.getBytes());
-            long hi = ByteBuffer.wrap(digest, 0, 8).getLong();
+            byte[] digest = md.digest(s.getBytes()); // 32 bytes (256 bits)
+            long hi = ByteBuffer.wrap(digest, 0, 8).getLong(); // First 8 bytes for high bits (64 bits)
+            /*
+             * Use >>> to ensure we treat the long as unsigned (non-negative).
+             * This is important because the range of a long is -2^63 to 2^63-1,
+             * and we want a value between 0.0 and 1.0.
+             */
             return (hi >>> 1) / (double) (1L << 63);
         } catch (Exception ex) {
             throw new RuntimeException(ex);

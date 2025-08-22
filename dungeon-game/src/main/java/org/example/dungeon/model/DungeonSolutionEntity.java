@@ -14,7 +14,6 @@ public class DungeonSolutionEntity {
     private int minHealthRequired;
     private String variant;
 
-    // Constructors, getters, setters
     public DungeonSolutionEntity() {}
 
     public DungeonSolutionEntity(String playerId, int minHealthRequired, String variant) {

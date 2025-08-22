@@ -3,7 +3,6 @@ package org.example.dungeon.solver;
 public class Dp1dSolver {
 
     public int solve(int[] rooms) {
-        // Implement 1D Dungeon solver logic
         int n = rooms.length;
         int[] dp = new int[n + 1];
         dp[n] = 1;

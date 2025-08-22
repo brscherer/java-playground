@@ -28,18 +28,10 @@ public class DungeonService {
     }
 
     public SolveResponse solve(SolveRequest request) {
-        // 1️⃣ Assign variant
         String variant = experimentAssigner.choose("dungeon_game", request.playerId());
-
-        // 2️⃣ Solve dungeon
         int minHealth = solver.solve(request.dungeon(), variant);
-
-        // 3️⃣ Persist experiment exposure
         exposureDao.save(new ExposureEntity(request.playerId(), "dungeon_game", variant));
-
-        // 4️⃣ Persist solution
         solutionDao.save(new DungeonSolutionEntity(request.playerId(), minHealth, variant));
-
         return new SolveResponse(request.playerId(), minHealth, variant);
     }
 }

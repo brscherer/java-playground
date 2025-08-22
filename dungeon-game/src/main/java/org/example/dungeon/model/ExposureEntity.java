@@ -21,7 +21,6 @@ public class ExposureEntity {
         this.variant = variant;
     }
 
-    // Getters / Setters
     public Long getId() { return id; }
     public String getPlayerId() { return playerId; }
     public String getExperimentKey() { return experimentKey; }

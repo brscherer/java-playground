@@ -38,5 +38,5 @@ tasks.test {
 }
 
 springBoot {
-    buildInfo()  // enables Boot build info plugin
+    buildInfo()
 }

@@ -12,7 +12,8 @@ public class Main {
         String[] dishes = {"Pizza", "Burger", "Salad", "Pasta"};
 
         for (String dish : dishes) {
-            Future<String> future = executor.submit(() -> prepareDish(dish));
+            Callable<String> task = new DishPreparationTask(dish);
+            Future<String> future = executor.submit(task);
             futures.add(future);
         }
 
@@ -33,8 +34,17 @@ public class Main {
             executor.shutdownNow();
         }
     }
+}
 
-    private static String prepareDish(String dish) {
+class DishPreparationTask implements Callable<String> {
+    private final String dish;
+
+    public DishPreparationTask(String dish) {
+        this.dish = dish;
+    }
+
+    @Override
+    public String call() throws Exception {
         try {
             int prepTime = ThreadLocalRandom.current().nextInt(1, 5);
             TimeUnit.SECONDS.sleep(prepTime);

@@ -1,17 +1,26 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    static void main() {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+import org.example.javatime.*;
+import org.example.jodatime.*;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
-        }
+public class Main {
+    public static void main(String[] args) {
+        printBanner("JAVA DATE-TIME API");
+        
+        JavaTimeExample.runAll();
+        JavaTimeTimezoneExample.runAll();
+        JavaTimeMeetingScheduler.runAll();
+        
+        printBanner("JODA TIME");
+        
+        JodaTimeExample.runAll();
+        JodaTimeTimezoneExample.runAll();
+        JodaTimeMeetingScheduler.runAll();
+    }
+    
+    private static void printBanner(String title) {
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("  " + title);
+        System.out.println("=".repeat(60));
     }
 }

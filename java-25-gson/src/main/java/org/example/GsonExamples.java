@@ -1,6 +1,7 @@
 package org.example;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.List;
 
 public class GsonExamples {
@@ -29,5 +30,24 @@ public class GsonExamples {
         String usersJson = "[{\"name\":\"Eve\",\"age\":26,\"email\":\"eve@example.com\"},{\"name\":\"Frank\",\"age\":32,\"email\":\"frank@example.com\"}]";
         User[] userArray = gson.fromJson(usersJson, User[].class);
         System.out.println("Parsed array: " + List.of(userArray));
+    }
+
+    static void advancedExamples() {
+        var prettyGson = new GsonBuilder()
+            .setPrettyPrinting()
+            .create();
+
+        Company company = new Company("TechCorp", List.of(
+            new User("Grace", 29, "grace@techcorp.com"),
+            new User("Henry", 31, "henry@techcorp.com")
+        ));
+        
+        String prettyJson = prettyGson.toJson(company);
+        System.out.println("Pretty printed:\n" + prettyJson);
+
+        Gson gson = new Gson();
+        String companyJson = "{\"name\":\"DevInc\",\"employees\":[{\"name\":\"Ivy\",\"age\":27,\"email\":\"ivy@devinc.com\"}]}";
+        Company parsed = gson.fromJson(companyJson, Company.class);
+        System.out.println("Nested object: " + parsed);
     }
 }

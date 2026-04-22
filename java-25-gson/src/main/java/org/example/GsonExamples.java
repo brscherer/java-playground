@@ -18,5 +18,16 @@ public class GsonExamples {
         String jsonList = gson.toJson(users);
         System.out.println("List: " + jsonList);
     }
-}
 
+    static void deserializationExamples() {
+        Gson gson = new Gson();
+
+        String userJson = "{\"name\":\"Diana\",\"age\":28,\"email\":\"diana@example.com\"}";
+        User user = gson.fromJson(userJson, User.class);
+        System.out.println("Parsed user: " + user);
+
+        String usersJson = "[{\"name\":\"Eve\",\"age\":26,\"email\":\"eve@example.com\"},{\"name\":\"Frank\",\"age\":32,\"email\":\"frank@example.com\"}]";
+        User[] userArray = gson.fromJson(usersJson, User[].class);
+        System.out.println("Parsed array: " + List.of(userArray));
+    }
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/main/java/org/example/creational/abstractfactory/FurnitureFactoryDemo.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/org/example/creational/abstractfactory/FurnitureFactoryDemo.java" />
+              <option name="updatedContent" value="package org.example.creational.abstractfactory;&#10;&#10;// Abstract Factory: Provides an interface for creating families of related objects without specifying concrete classes.&#10;// Fun example: A furniture factory creating themed sets of chairs and tables.&#10;&#10;interface Chair {&#10;    void sitOn();&#10;}&#10;&#10;interface Table {&#10;    void placeOn();&#10;}&#10;&#10;record VictorianChair() implements Chair {&#10;    @Override&#10;    public void sitOn() {&#10;        System.out.println(&quot;Sitting elegantly on a Victorian chair.&quot;);&#10;    }&#10;}&#10;&#10;record VictorianTable() implements Table {&#10;    @Override&#10;    public void placeOn() {&#10;        System.out.println(&quot;Placing items on an ornate Victorian table.&quot;);&#10;    }&#10;}&#10;&#10;record ModernChair() implements Chair {&#10;    @Override&#10;    public void sitOn() {&#10;        System.out.println(&quot;Lounging on a sleek modern chair.&quot;);&#10;    }&#10;}&#10;&#10;record ModernTable() implements Table {&#10;    @Override&#10;    public void placeOn() {&#10;        System.out.println(&quot;Setting up on a minimalist modern table.&quot;);&#10;    }&#10;}&#10;&#10;interface FurnitureFactory {&#10;    Chair createChair();&#10;    Table createTable();&#10;}&#10;&#10;class VictorianFurnitureFactory implements FurnitureFactory {&#10;    @Override&#10;    public Chair createChair() {&#10;        return new VictorianChair();&#10;    }&#10;&#10;    @Override&#10;    public Table createTable() {&#10;        return new VictorianTable();&#10;    }&#10;}&#10;&#10;class ModernFurnitureFactory implements FurnitureFactory {&#10;    @Override&#10;    public Chair createChair() {&#10;        return new ModernChair();&#10;    }&#10;&#10;    @Override&#10;    public Table createTable() {&#10;        return new ModernTable();&#10;    }&#10;}&#10;&#10;public class FurnitureFactoryDemo {&#10;    public static void main(String[] args) {&#10;        System.out.println(&quot;Demonstrating Abstract Factory pattern:&quot;);&#10;        FurnitureFactory victorianFactory = new VictorianFurnitureFactory();&#10;        Chair victorianChair = victorianFactory.createChair();&#10;        Table victorianTable = victorianFactory.createTable();&#10;        victorianChair.sitOn();&#10;        victorianTable.placeOn();&#10;&#10;        FurnitureFactory modernFactory = new ModernFurnitureFactory();&#10;        Chair modernChair = modernFactory.createChair();&#10;        Table modernTable = modernFactory.createTable();&#10;        modernChair.sitOn();&#10;        modernTable.placeOn();&#10;    }&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

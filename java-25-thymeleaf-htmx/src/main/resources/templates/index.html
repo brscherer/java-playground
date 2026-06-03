@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Java 25 + Spring Boot + HTMX</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <style>
+        .done { text-decoration: line-through; color: var(--pico-muted-color); }
+        .stats { display: flex; gap: 2rem; margin-bottom: 1rem; }
+        .stats span { font-size: 0.9rem; }
+        .stats strong { font-size: 1.4rem; }
+        .task-row { display: flex; align-items: center; gap: 0.5rem; }
+        .task-row form { margin: 0; }
+        .task-row .delete-btn { margin-left: auto; }
+        .htmx-swapping { opacity: 0; transition: opacity 200ms; }
+        .htmx-added { opacity: 0; }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1>Java 25 + Spring Boot + Thymeleaf + HTMX</h1>
+
+        <form id="task-form" th:hx-post="@{/tasks}" hx-target="#task-list-container" hx-swap="outerHTML">
+            <fieldset role="group">
+                <input type="text" name="title" placeholder="Add a new task..." required autocomplete="off">
+                <input type="submit" value="Add Task">
+            </fieldset>
+        </form>
+
+        <div id="task-list-container" th:insert="~{fragments/task-list :: task-list}"></div>
+    </main>
+</body>
+</html>

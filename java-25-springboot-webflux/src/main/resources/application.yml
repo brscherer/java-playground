@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: social-network
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    cache: false
+
+  r2dbc:
+    url: r2dbc:h2:mem:///socialdb?options=DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    initialization-mode: always
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          enabled: true
+          max-active: 16
+          max-idle: 8
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: event:org.example.event.PostCreatedEvent
+    consumer:
+      group-id: timeline-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.type.mapping: event:org.example.event.PostCreatedEvent
+        spring.json.value.default.type: org.example.event.PostCreatedEvent
+    listener:
+      missing-topics-fatal: false
+
+server:
+  port: 8080

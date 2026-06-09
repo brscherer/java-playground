@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="post-item" class="post"
+     th:attrappend="data-timestamp=${post.createdAt.toEpochMilli()}"
+     th:id="|post-${post.id}|">
+    <div class="author" th:text="${author != null ? author.displayName : 'Unknown'}">
+        Author
+    </div>
+    <div class="content" th:text="${post.content}">
+        Content
+    </div>
+    <div class="meta" th:text="${#temporals.format(post.createdAt, 'MMM d, yyyy h:mm a')}">
+        Date
+    </div>
+</div>
+
+<div th:fragment="post-list" th:remove="tag">
+    <div th:each="post : ${posts}" class="post"
+         th:attrappend="data-timestamp=${post.createdAt.toEpochMilli()}"
+         th:id="|post-${post.id}|">
+        <div class="author" th:text="${authors != null && authors.containsKey(post.userId) ? authors.get(post.userId).displayName : 'Unknown'}">
+            Author
+        </div>
+        <div class="content" th:text="${post.content}">Content</div>
+        <div class="meta" th:text="${#temporals.format(post.createdAt, 'MMM d, yyyy h:mm a')}">Date</div>
+    </div>
+</div>
+</body>
+</html>

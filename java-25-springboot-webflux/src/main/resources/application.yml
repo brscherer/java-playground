@@ -12,7 +12,6 @@ spring:
     url: r2dbc:h2:mem:///socialdb?options=DB_CLOSE_DELAY=-1
     username: sa
     password:
-    initialization-mode: always
 
   h2:
     console:
@@ -22,7 +21,6 @@ spring:
   sql:
     init:
       mode: always
-      schema-locations: classpath:schema.sql
 
   data:
     redis:
